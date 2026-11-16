@@ -28,41 +28,65 @@ button{font:inherit;border:1px solid #36516b;border-radius:9px;background:linear
 .progress{height:5px;background:#26374b;border-radius:8px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;background:var(--cyan);width:0}
 .footer{font-size:9px;text-align:center;color:#60748b;margin:12px 0 0;line-height:1.5}.toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,20px);opacity:0;background:#eaf8ff;color:#102032;padding:10px 16px;border-radius:20px;font-size:11px;font-weight:900;z-index:20;transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}
 @media(max-height:760px){.arena{height:340px}}@media(min-width:430px){.arena{height:420px}}
+
+[hidden]{display:none!important}
+.app{width:min(100%,510px);margin:auto;padding-bottom:22px}
+.home-hero{position:relative;min-height:190px;padding:23px 16px;border:1px solid #30485e;border-radius:17px;overflow:hidden;background:linear-gradient(110deg,#101d2c 0%,#1b3445 58%,#6b5746 100%);box-shadow:inset 0 0 45px #02070b88}
+.home-hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#0b1520 0%,#0b1520dd 48%,transparent 100%);pointer-events:none}
+.home-copy{position:relative;z-index:2;max-width:68%}.home-copy small{color:#77dff0;font-size:9px;letter-spacing:1.8px;font-weight:900}.home-copy h1{font-size:29px;line-height:.98;letter-spacing:1px;margin:10px 0;color:#fff}.home-copy p{font-size:11px;line-height:1.5;color:#b9c8d1;margin:0;max-width:220px}
+.home-character{position:absolute;z-index:1;height:178px;width:130px;object-fit:contain;right:0;bottom:-7px;filter:drop-shadow(0 6px 10px #0009)}
+.weapon-panel{margin-top:9px}.battle-button{width:100%;margin-top:12px;padding:17px 18px;display:flex;justify-content:space-between;align-items:center;border:1px solid #b27b35;border-radius:13px;background:linear-gradient(110deg,#f0a33f,#c86a2c);color:#21160d;font-size:14px;letter-spacing:1.5px;box-shadow:0 7px 20px #0005}.battle-button b{font-size:22px}.battle-button:active{filter:brightness(1.12)}
+.battle-top{display:flex;align-items:center;gap:12px;padding:10px 2px 13px}.exit-battle{width:38px;height:38px;padding:0;font-size:27px;border-radius:10px}.battle-top>div:nth-child(2){display:flex;flex-direction:column;gap:3px;flex:1}.battle-top small{font-size:9px;color:#8fa7b8;letter-spacing:1.5px}.battle-top strong{font-size:15px;color:#fff}.battle-life{min-width:112px;text-align:right}.battle-life span{font-size:8px;color:#a9bacb;letter-spacing:1px}.battle-life b{display:block;font-size:12px;margin:2px 0 5px}.battle-life i{display:block;height:6px;border-radius:9px;background:#48232d;overflow:hidden}.battle-life em{display:block;width:100%;height:100%;background:linear-gradient(90deg,#ff536a,#ff9b76);transition:width .2s}
+#battleScreen .arena{height:min(68vh,590px);min-height:390px;border-radius:13px}
+#battleScreen .player{width:53px;height:68px;bottom:12px}
+#battleScreen .hero-art{width:100%;height:100%}
+#battleScreen .enemy{width:34px;height:39px}
+#battleScreen .enemy.boss{width:57px;height:63px}
+#battleScreen .weapon-label{font-size:8px;bottom:5px}
+#battleScreen .bottom-hud{display:none}
+.battle-foot{display:flex;justify-content:space-between;padding:10px 3px;color:#9eb4c4;font-size:9px;letter-spacing:1px}
+@media(max-height:760px){#battleScreen .arena{height:62vh;min-height:330px}}
 </style>
 </head>
 <body>
 <main class="app">
 <header class="top"><div class="brand">PROJETO DE SOBREVIVÊNCIA<b>ARSENAL IDLE</b></div><div class="save" id="saveState">● SALVO</div></header>
-<section class="stats">
- <div class="stat"><small>Moedas</small><strong class="gold" id="coins">0</strong></div>
- <div class="stat"><small>Eliminações</small><strong id="kills">0</strong></div>
- <div class="stat"><small>Fase / Onda</small><strong class="cyan" id="stage">1 / 1</strong></div>
+<section id="homeScreen">
+ <section class="home-hero">
+  <div class="home-copy"><small>PREPARE-SE PARA SOBREVIVER</small><h1>MONTE SEU<br>ARSENAL.</h1><p>Fortaleça seu combatente. Aguente o máximo de ondas possível.</p></div>
+  <img src="assets/hero.svg" alt="Combatente" class="home-character">
+ </section>
+ <section class="stats">
+  <div class="stat"><small>Moedas</small><strong class="gold" id="coins">0</strong></div>
+  <div class="stat"><small>Eliminações</small><strong id="kills">0</strong></div>
+  <div class="stat"><small>Fase / Onda</small><strong class="cyan" id="stage">1 / 1</strong></div>
+ </section>
+ <section class="panel weapon-panel">
+  <div class="section-head"><h2>ARSENAL ATUAL</h2><span id="weaponLevel">NÍVEL 1 / 10</span></div>
+  <div class="weapon-card"><div class="weapon-icon" id="weaponIcon">🪵</div><div class="weapon-info"><strong id="weaponName">Graveto</strong><small id="weaponDesc">Ataque simples e direto</small><div class="next" id="nextWeapon">Próxima: Pedra • 100 moedas</div></div><button id="evolveBtn">EVOLUIR</button></div>
+ </section>
+ <section class="panel">
+  <div class="section-head"><h2>MELHORIAS</h2><span>INVISTA SUAS MOEDAS</span></div>
+  <div class="upgrade-grid">
+   <button class="up" id="damageBtn"><b>⚔ Dano +25%</b><small id="damageLevel">Nível 0</small><em id="damageCost">Custo: 25</em></button>
+   <button class="up" id="speedBtn"><b>⚡ Cadência +12%</b><small id="speedLevel">Nível 0</small><em id="speedCost">Custo: 40</em></button>
+   <button class="up" id="rangeBtn"><b>◎ Alcance +15%</b><small id="rangeLevel">Nível 0</small><em id="rangeCost">Custo: 35</em></button>
+   <button class="up" id="critBtn"><b>✦ Crítico +3%</b><small id="critLevel">Nível 0</small><em id="critCost">Custo: 60</em></button>
+  </div>
+ </section>
+ <button class="battle-button" id="battleBtn"><span>INICIAR BATALHA</span><b>➜</b></button>
+ <p class="footer">Prepare seu equipamento antes de cada batalha. As melhorias compradas permanecem salvas.</p>
 </section>
-<section class="arena" id="arena">
- <div class="hud"><span id="enemyCount">AMEAÇAS: 0</span><span class="wave" id="waveLabel">ONDA 1</span></div>
- <div class="player" id="player"><img class="hero-art" src="assets/hero.svg" alt="Combatente"></div>
- <div class="weapon-label" id="weaponLabel">GRAVETO</div>
- <div class="bottom-hud"><span id="weaponDamage">DANO 1</span><span id="rangeLabel">ALCANCE 100%</span></div>
+<section id="battleScreen" hidden>
+ <div class="battle-top"><button class="exit-battle" id="retreatBtn" aria-label="Retornar à base">‹</button><div><small id="battleStage">FASE 1</small><strong id="battleWave">ONDA 1</strong></div><div class="battle-life"><span>VIDA</span><b id="healthText">100 / 100</b><i><em id="healthBar"></em></i></div></div>
+ <section class="arena" id="arena">
+  <div class="hud"><span id="enemyCount">AMEAÇAS: 0</span><span class="wave" id="waveLabel">ONDA 1</span></div>
+  <div class="player" id="player"><img class="hero-art" src="assets/hero.svg" alt="Combatente"></div>
+  <div class="weapon-label" id="weaponLabel">GRAVETO</div>
+ </section>
+ <div class="battle-foot"><span id="battleWeapon">GRAVETO</span><span id="battleDamage">DANO 1</span></div>
 </section>
-<div class="health"><i id="healthBar"></i></div>
-<div class="section-head"><h2>ARSENAL ATUAL</h2><span id="healthText">VIDA 100 / 100</span></div>
-<section class="panel">
- <div class="weapon-card"><div class="weapon-icon" id="weaponIcon">🪵</div><div class="weapon-info"><strong id="weaponName">Graveto</strong><small id="weaponDesc">Ataque simples e direto</small><div class="next" id="nextWeapon">Próxima: Pedra • 100 moedas</div></div><button id="evolveBtn">EVOLUIR</button></div>
- <div class="progress"><i id="waveProgress"></i></div>
-</section>
-<section class="panel">
- <div class="section-head"><h2>MELHORIAS DE COMBATE</h2><span>UPGRADES PERMANENTES</span></div>
- <div class="upgrade-grid">
-  <button class="up" id="damageBtn"><b>⚔ Dano +25%</b><small id="damageLevel">Nível 0</small><em id="damageCost">Custo: 25</em></button>
-  <button class="up" id="speedBtn"><b>⚡ Cadência +12%</b><small id="speedLevel">Nível 0</small><em id="speedCost">Custo: 40</em></button>
-  <button class="up" id="rangeBtn"><b>◎ Alcance +15%</b><small id="rangeLevel">Nível 0</small><em id="rangeCost">Custo: 35</em></button>
-  <button class="up" id="critBtn"><b>✦ Crítico +3%</b><small id="critLevel">Nível 0</small><em id="critCost">Custo: 60</em></button>
- </div>
-</section>
-<div class="controls"><button id="pauseBtn">Ⅱ PAUSAR</button><button id="resetBtn">↻ REINICIAR</button></div>
-<p class="footer">O combatente ataca automaticamente a ameaça mais próxima. Invista as moedas, evolua o arsenal e sobreviva às ondas.<br>Seu progresso fica salvo neste dispositivo.</p>
-</main><div class="toast" id="toast"></div>
-<script>
+</main><div class="toast" id="toast"></div><script>
 (()=>{
 'use strict';
 const $=id=>document.getElementById(id), arena=$('arena');
@@ -79,9 +103,12 @@ const weapons=[
  {name:'Canhão de plasma',icon:'🔮',damage:500,rate:700,desc:'Energia devastadora em área',type:'plasma',cost:350000}
 ];
 const defaults={coins:0,kills:0,stage:1,wave:1,weapon:0,damageLv:0,speedLv:0,rangeLv:0,critLv:0,hp:100,maxHp:100};
-let s={...defaults,...load()}, enemies=[],shots=[],lastShot=0,lastSpawn=0,spawned=0,waveSize=8,paused=false,last=0,saveTimer=0;
+let s={...defaults,...load()}, enemies=[],shots=[],lastShot=0,lastSpawn=0,spawned=0,waveSize=8,paused=true,last=0,saveTimer=0,inBattle=false,returning=false;
 function load(){try{return JSON.parse(localStorage.getItem('arsenalIdleSave'))||{}}catch(e){return {}}}
 function save(){localStorage.setItem('arsenalIdleSave',JSON.stringify(s));$('saveState').textContent='● SALVO'}
+function clearArena(){enemies.forEach(e=>e.el.remove());shots.forEach(sh=>sh.el.remove());enemies=[];shots=[];spawned=0;lastSpawn=0;lastShot=0}
+function showHome(){inBattle=false;paused=true;$('battleScreen').hidden=true;$('homeScreen').hidden=false;clearArena();s.hp=s.maxHp;update();save()}
+function startBattle(){if(inBattle)return;clearArena();s.hp=s.maxHp;paused=false;inBattle=true;$('homeScreen').hidden=true;$('battleScreen').hidden=false;$('battleStage').textContent='FASE '+s.stage;$('battleWave').textContent='ONDA '+s.wave;update();last=0;lastSpawn=0;lastShot=0;}
 function fmt(n){return Math.floor(n).toLocaleString('pt-BR')}
 function cost(base,lv){return Math.floor(base*Math.pow(1.48,lv))}
 function toast(t){$('toast').textContent=t;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),1300)}
@@ -90,20 +117,19 @@ function rate(){return Math.max(75,weapons[s.weapon].rate*Math.pow(.88,s.speedLv
 function range(){return Math.min(1.8,1+s.rangeLv*.15)}
 function crit(){return Math.min(.75,s.critLv*.03)}
 function update(){
- $('coins').textContent=fmt(s.coins);$('kills').textContent=fmt(s.kills);$('stage').textContent=s.stage+' / '+s.wave;$('waveLabel').textContent='ONDA '+s.wave;
- $('enemyCount').textContent='AMEAÇAS: '+enemies.length;$('healthText').textContent='VIDA '+Math.ceil(s.hp)+' / '+s.maxHp;$('healthBar').style.width=Math.max(0,s.hp/s.maxHp*100)+'%';
- let w=weapons[s.weapon];$('weaponIcon').textContent=w.icon;$('weaponName').textContent=w.name;$('weaponLabel').textContent=w.name.toUpperCase();$('weaponDesc').textContent=w.desc;
- $('weaponDamage').textContent='DANO '+fmt(damage());$('rangeLabel').textContent='ALCANCE '+Math.round(range()*100)+'%';
+ if($('coins'))$('coins').textContent=fmt(s.coins);if($('kills'))$('kills').textContent=fmt(s.kills);if($('stage'))$('stage').textContent=s.stage+' / '+s.wave;if($('waveLabel'))$('waveLabel').textContent='ONDA '+s.wave;if($('battleStage'))$('battleStage').textContent='FASE '+s.stage;if($('battleWave'))$('battleWave').textContent='ONDA '+s.wave;
+ if($('enemyCount'))$('enemyCount').textContent='AMEAÇAS: '+enemies.length;if($('healthText'))$('healthText').textContent=Math.ceil(s.hp)+' / '+s.maxHp;if($('healthBar'))$('healthBar').style.width=Math.max(0,s.hp/s.maxHp*100)+'%';
+ let w=weapons[s.weapon];if($('weaponIcon'))$('weaponIcon').textContent=w.icon;if($('weaponName'))$('weaponName').textContent=w.name;if($('weaponLabel'))$('weaponLabel').textContent=w.name.toUpperCase();if($('weaponDesc'))$('weaponDesc').textContent=w.desc;if($('weaponLevel'))$('weaponLevel').textContent='NÍVEL '+(s.weapon+1)+' / 10';if($('battleWeapon'))$('battleWeapon').textContent=w.name.toUpperCase();if($('battleDamage'))$('battleDamage').textContent='DANO '+fmt(damage());
+ 
  let next=weapons[s.weapon+1];$('nextWeapon').textContent=next?'Próxima: '+next.name+' • '+fmt(next.cost)+' moedas':'ARSENAL MÁXIMO ALCANÇADO';
  $('evolveBtn').disabled=!next||s.coins<next.cost;$('evolveBtn').textContent=next?'EVOLUIR':'MÁXIMO';
  for(let [k,b,c] of [['damage','damage',25],['speed','speed',40],['range','range',35],['crit','crit',60]]){$(k+'Level').textContent='Nível '+s[b+'Lv'];$(k+'Cost').textContent='Custo: '+fmt(cost(c,s[b+'Lv']));$(k+'Btn').disabled=s.coins<cost(c,s[b+'Lv'])||(k==='speed'&&rate()<=75)||(k==='range'&&range()>=1.8)||(k==='crit'&&crit()>=.75)}
- $('waveProgress').style.width=Math.min(100,spawned/waveSize*100)+'%';
+ 
 }
 function buy(key,base){let c=cost(base,s[key+'Lv']);if(s.coins<c)return;s.coins-=c;s[key+'Lv']++;toast('Melhoria comprada!');update();save()}
 $('damageBtn').onclick=()=>buy('damage',25);$('speedBtn').onclick=()=>buy('speed',40);$('rangeBtn').onclick=()=>buy('range',35);$('critBtn').onclick=()=>buy('crit',60);
 $('evolveBtn').onclick=()=>{let n=weapons[s.weapon+1];if(n&&s.coins>=n.cost){s.coins-=n.cost;s.weapon++;toast('ARSENAL EVOLUÍDO: '+n.name.toUpperCase());update();save()}};
-$('pauseBtn').onclick=()=>{paused=!paused;$('pauseBtn').textContent=paused?'▶ CONTINUAR':'Ⅱ PAUSAR'};
-$('resetBtn').onclick=()=>{if(confirm('Apagar todo o progresso e começar do zero?')){localStorage.removeItem('arsenalIdleSave');s={...defaults};enemies=[];shots=[];spawned=0;update();toast('Progresso reiniciado')}}; 
+$('battleBtn').onclick=startBattle;$('retreatBtn').onclick=()=>{showHome();toast('Você voltou à base. Prepare-se para a próxima batalha.')}; 
 function spawn(){
  let boss=s.wave%5===0&&spawned===0,scale=1+(s.stage-1)*.48+(s.wave-1)*.13;
  let hp=(boss?180:16+spawned*2)*scale, speed=(boss?17:23+Math.random()*17)*(1+(s.stage-1)*.04);
@@ -123,19 +149,19 @@ function hitEnemy(e,dmg,x,y,aoe){
  if(e.hp<=0){e.el.remove();enemies=enemies.filter(a=>a!==e);s.kills++;s.coins+=e.boss?Math.floor(80*s.stage):Math.max(2,Math.floor((3+s.stage*.8)*(1+s.weapon*.13)));if(e.boss)toast('CHEFE ELIMINADO!');update()}
 }
 function step(now,dt){
- if(!paused){
+ if(!paused&&inBattle){
   if(now-lastSpawn>Math.max(380,1050-s.stage*18)){if(spawned<waveSize){spawn();spawned++;lastSpawn=now}}
   let target=closest();if(target&&now-lastShot>rate()){shoot(target,now);lastShot=now}
-  enemies.forEach(e=>{e.y+=e.speed*dt/1000;e.el.style.top=e.y+'px';e.el.style.left=e.x+'px';let f=e.el.querySelector('i');if(f)f.style.width=Math.max(0,e.hp/e.maxHp*100)+'%';if(e.y>arena.clientHeight-110){e.el.remove();e.hp=0;s.hp-=e.damage;enemies=enemies.filter(a=>a!==e);if(s.hp<=0){s.hp=0;paused=true;$('pauseBtn').textContent='▶ CONTINUAR';toast('VOCÊ FOI DERROTADO. REINICIE OU CONTINUE.')}update()}});
+  enemies.forEach(e=>{e.y+=e.speed*dt/1000;e.el.style.top=e.y+'px';e.el.style.left=e.x+'px';let f=e.el.querySelector('i');if(f)f.style.width=Math.max(0,e.hp/e.maxHp*100)+'%';if(e.y>arena.clientHeight-110){e.el.remove();e.hp=0;s.hp-=e.damage;enemies=enemies.filter(a=>a!==e);if(s.hp<=0){s.hp=0;paused=true;returning=true;setTimeout(()=>{if(returning&&inBattle){returning=false;showHome();toast('FIM DE BATALHA! Use suas moedas para melhorar o arsenal.')}},1100)}update()}});
   shots.forEach(sh=>{if(!enemies.includes(sh.target)){sh.target=closest();if(!sh.target){sh.el.remove();shots=shots.filter(a=>a!==sh);return}}
    let dx=sh.target.x+13-sh.x,dy=sh.target.y+13-sh.y,dist=Math.hypot(dx,dy),step=sh.speed*dt/16; if(dist<step+12){hitEnemy(sh.target,sh.damage,sh.target.x,sh.target.y,sh.aoe);sh.el.remove();shots=shots.filter(a=>a!==sh)}else{sh.x+=dx/dist*step;sh.y+=dy/dist*step;sh.el.style.left=sh.x+'px';sh.el.style.top=sh.y+'px'}
   });
-  if(spawned>=waveSize&&enemies.length===0){s.wave++;if(s.wave>5){s.wave=1;s.stage++;s.maxHp+=10;s.hp=Math.min(s.maxHp,s.hp+25);toast('FASE '+s.stage+' DESBLOQUEADA!')}spawned=0;waveSize=8+Math.min(14,s.stage+s.wave);update();save()}
+  if(spawned>=waveSize&&enemies.length===0){s.wave++;if(s.wave>5){s.wave=1;s.stage++;s.maxHp+=10;s.hp=Math.min(s.maxHp,s.hp+25);toast('FASE '+s.stage+' DESBLOQUEADA!')}spawned=0;waveSize=8+Math.min(14,s.stage+s.wave);update();$('battleWave').textContent='ONDA '+s.wave;save()}
   saveTimer+=dt;if(saveTimer>5000){save();saveTimer=0}
  }
 }
 function loop(now){let dt=Math.min(50,now-(last||now));last=now;step(now,dt);requestAnimationFrame(loop)}
-update();requestAnimationFrame(loop);window.addEventListener('beforeunload',save);
+update();showHome();requestAnimationFrame(loop);window.addEventListener('beforeunload',save);
 })();
 </script>
 </body>
