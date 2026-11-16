@@ -61,10 +61,14 @@ button{font:inherit;border:1px solid #36516b;border-radius:9px;background:linear
 #battleScreen .battle-life{grid-column:2;grid-row:1;min-width:0;text-align:right}
 #battleScreen .battle-life b{font-size:11px}
 #battleScreen .arena{position:absolute;inset:0;width:100%;height:100%;min-height:0;border:0;border-radius:0;background-size:cover;background-position:center}
-#battleScreen .player{width:25px;height:25px;bottom:15px;filter:drop-shadow(0 1px 4px #000d)}
+#battleScreen .player{width:44px;height:54px;bottom:15px;filter:drop-shadow(0 2px 5px #000d)}
 #battleScreen .player:after{inset:-3px}
-#battleScreen .enemy{width:23px;height:27px}
-#battleScreen .enemy.boss{width:39px;height:43px}
+#battleScreen .enemy{width:42px;height:48px}
+#battleScreen .enemy.boss{width:64px;height:70px}
+#battleScreen .enemy-art{width:100%;height:100%;display:block;overflow:visible}
+#battleScreen .hud{gap:10px;align-items:center}
+#battleScreen .hud span:last-child{color:#ffd16b;font-weight:900}
+#battleScreen .survival-time{color:#fff;font-variant-numeric:tabular-nums;font-weight:900}
 #battleScreen .hud{top:62px;left:14px;right:14px;font-size:10px}
 #battleScreen .weapon-label{display:none}
 #battleScreen .battle-foot{position:absolute;bottom:env(safe-area-inset-bottom,0px);left:0;right:0;z-index:8;padding:12px 15px calc(12px + env(safe-area-inset-bottom,0px));background:linear-gradient(0deg,#07111af2,#07111a99 75%,transparent);font-size:11px;color:#e1edf4}
@@ -103,8 +107,8 @@ button{font:inherit;border:1px solid #36516b;border-radius:9px;background:linear
 <section id="battleScreen" hidden>
  <div class="battle-top"><div><small id="battleStage">FASE 1</small><strong id="battleWave">ONDA 1</strong></div><div class="battle-life"><span>VIDA</span><b id="healthText">100 / 100</b><i><em id="healthBar"></em></i></div></div>
  <section class="arena" id="arena">
-  <div class="hud"><span id="enemyCount">RESTANTES: 0</span></div>
-  <div class="player" id="player" aria-label="Combatente visto de cima"><svg class="hero-art" viewBox="0 0 100 100" role="img" aria-label="Combatente visto de cima"><defs><linearGradient id="topArmor" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#9af2f5"/><stop offset=".45" stop-color="#277b91"/><stop offset="1" stop-color="#123449"/></linearGradient><linearGradient id="topGun" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#dce9e8"/><stop offset="1" stop-color="#394d59"/></linearGradient></defs><ellipse cx="50" cy="53" rx="35" ry="39" fill="#050b12" opacity=".65"/><path d="M20 38 9 31 5 39 17 53 9 65 19 72 32 61 68 61 81 72 91 64 83 52 95 39 88 31 76 39Z" fill="#142b3c" stroke="#9abdc4" stroke-width="3"/><path d="M28 27Q50 14 72 27L78 57Q70 77 50 81 30 77 22 57Z" fill="url(#topArmor)" stroke="#b5f4ef" stroke-width="3"/><path d="M34 30Q50 21 66 30L68 51 50 66 32 51Z" fill="#1b3d51" stroke="#5ed2df" stroke-width="2"/><path d="M39 31Q50 21 61 31L59 44 50 51 41 44Z" fill="#d2b18f" stroke="#f5d6b5" stroke-width="2"/><path d="M39 30Q50 18 61 30L58 35 50 32 42 35Z" fill="#263a46"/><path d="M58 43 88 13 95 19 65 51Z" fill="url(#topGun)" stroke="#172a37" stroke-width="3"/><path d="m84 17 9-9 5 5-9 9" fill="#ffc76c" stroke="#493b2b" stroke-width="2"/><circle cx="50" cy="56" r="5" fill="#e8f7f0" stroke="#2a6678" stroke-width="2"/><path d="m37 67-7 10m33-10 7 10" stroke="#c3d9d5" stroke-width="5" stroke-linecap="round"/><path d="M45 74h10" stroke="#f0c16e" stroke-width="3" stroke-linecap="round"/></svg></div>
+  <div class="hud"><span id="enemyCount">RESTANTES: 0</span><span class="survival-time" id="survivalTime">TEMPO 00:00</span><span id="survivalGold">+1 OURO / SEG</span></div>
+  <div class="player" id="player" aria-label="Combatente visto de cima"><svg class="hero-art" viewBox="0 0 100 120" role="img" aria-label="Soldado visto de cima"><defs><linearGradient id="soldierArmor" x2="1" y2="1"><stop stop-color="#e0d5b7"/><stop offset=".48" stop-color="#718b78"/><stop offset="1" stop-color="#263d36"/></linearGradient><linearGradient id="soldierMetal" x2="0" y2="1"><stop stop-color="#d7e1dc"/><stop offset="1" stop-color="#35464b"/></linearGradient></defs><ellipse cx="50" cy="66" rx="37" ry="47" fill="#03070b" opacity=".65"/><path d="M24 55 8 48 3 58 17 76 10 91 23 99 38 83 62 83 77 99 90 91 83 76 97 58 92 48 76 55Z" fill="#293e37" stroke="#b2b99d" stroke-width="3"/><path d="M27 39Q50 23 73 39L79 76Q69 99 50 103 31 99 21 76Z" fill="url(#soldierArmor)" stroke="#d3d0b2" stroke-width="3"/><path d="M31 43Q50 30 69 43L68 70 50 86 32 70Z" fill="#3d5b4c" stroke="#8fa58a" stroke-width="2"/><path d="M35 37Q50 18 65 37L62 53 50 61 38 53Z" fill="#c3a27d" stroke="#e5c8a0" stroke-width="2"/><path d="M32 38Q50 14 68 38L64 44 50 38 36 44Z" fill="#3c4b42" stroke="#c3c2a6" stroke-width="3"/><path d="M57 48 81 13 90 19 66 59Z" fill="url(#soldierMetal)" stroke="#18272b" stroke-width="4"/><path d="m80 16 8-12 7 5-8 13" fill="#202b30" stroke="#d5d5c3" stroke-width="2"/><path d="M40 71 31 87m29-16 9 16" stroke="#c3c7ae" stroke-width="6" stroke-linecap="round"/><circle cx="50" cy="68" r="5" fill="#e8e2c7" stroke="#344b43" stroke-width="2"/><path d="M43 94h14" stroke="#d7ad69" stroke-width="4" stroke-linecap="round"/></svg></div>
   <div class="weapon-label" id="weaponLabel">GRAVETO</div>
  </section>
  <div class="battle-foot"><span id="battleWeapon">GRAVETO</span><span id="battleDamage">DANO 1</span></div>
@@ -126,12 +130,12 @@ const weapons=[
  {name:'Canhão de plasma',icon:'🔮',damage:500,rate:700,desc:'Energia devastadora em área',type:'plasma',cost:350000}
 ];
 const defaults={coins:0,kills:0,stage:1,wave:1,weapon:0,damageLv:0,speedLv:0,rangeLv:0,critLv:0,hp:100,maxHp:100};
-let s={...defaults,...load()}, enemies=[],shots=[],lastShot=0,lastSpawn=0,spawned=0,waveSize=8,paused=true,last=0,saveTimer=0,inBattle=false,returning=false;
+let s={...defaults,...load()}, enemies=[],shots=[],lastShot=0,lastSpawn=0,spawned=0,waveSize=8,paused=true,last=0,saveTimer=0,inBattle=false,returning=false,survivalMs=0,rewardedSeconds=0;
 function load(){try{return JSON.parse(localStorage.getItem('arsenalIdleSave'))||{}}catch(e){return {}}}
 function save(){localStorage.setItem('arsenalIdleSave',JSON.stringify(s));$('saveState').textContent='● SALVO'}
 function clearArena(){enemies.forEach(e=>e.el.remove());shots.forEach(sh=>sh.el.remove());enemies=[];shots=[];spawned=0;lastSpawn=0;lastShot=0}
 function showHome(){inBattle=false;paused=true;$('battleScreen').hidden=true;$('homeScreen').hidden=false;clearArena();s.hp=s.maxHp;update();save()}
-function startBattle(){if(inBattle)return;clearArena();s.hp=s.maxHp;paused=false;inBattle=true;$('homeScreen').hidden=true;$('battleScreen').hidden=false;$('battleStage').textContent='FASE '+s.stage;$('battleWave').textContent='ONDA '+s.wave;update();last=0;lastSpawn=0;lastShot=0;}
+function startBattle(){if(inBattle)return;clearArena();s.hp=s.maxHp;survivalMs=0;rewardedSeconds=0;paused=false;inBattle=true;$('survivalTime').textContent='TEMPO 00:00';$('homeScreen').hidden=true;$('battleScreen').hidden=false;$('battleStage').textContent='FASE '+s.stage;$('battleWave').textContent='ONDA '+s.wave;update();last=0;lastSpawn=0;lastShot=0;}
 function fmt(n){return Math.floor(n).toLocaleString('pt-BR')}
 function cost(base,lv){return Math.floor(base*Math.pow(1.48,lv))}
 function toast(t){$('toast').textContent=t;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),1300)}
@@ -156,12 +160,12 @@ $('battleBtn').onclick=startBattle;$('retreatBtn').onclick=()=>{showHome();toast
 function spawn(){
  let boss=s.wave%5===0&&spawned===0,scale=1+(s.stage-1)*.48+(s.wave-1)*.13;
  let hp=(boss?180:16+spawned*2)*scale, speed=(boss?17:23+Math.random()*17)*(1+(s.stage-1)*.04);
- let el=document.createElement('div');el.className='enemy'+(boss?' boss':'');let art=boss?'boss.svg':['enemy-raider.svg','enemy-ghoul.svg','enemy-brute.svg'][Math.floor(Math.random()*3)];el.innerHTML='<img class="enemy-art" src="assets/'+art+'" alt="Inimigo">';
+ let el=document.createElement('div');el.className='enemy'+(boss?' boss':'');let kind=boss?'boss':['raider','ghoul','brute'][Math.floor(Math.random()*3)];el.innerHTML=enemySvg(kind);
  let x=18+Math.random()*(arena.clientWidth-55);el.style.left=x+'px';el.style.top='42px';
  let bar=document.createElement('div');bar.className='hpbar';let fill=document.createElement('i');bar.append(fill);el.append(bar);arena.append(el);
  enemies.push({el,x,y:42,hp,maxHp:hp,speed,boss,damage:boss?28:12});
 }
-function playerPoint(){return{x:arena.clientWidth/2,y:arena.clientHeight-16-19}}
+function enemySvg(kind){const p={raider:['#b8a17a','#594d3b','#e8c99a'],ghoul:['#9cbd8a','#344d3d','#d8e8b0'],brute:['#bd7770','#573c43','#f0b1a0'],boss:['#a68ad6','#40345f','#e5c5ff']}[kind]||['#b8a17a','#594d3b','#e8c99a'];return '<svg class="enemy-art" viewBox="0 0 100 110" aria-label="Inimigo"><defs><linearGradient id="enemySkin" x2="1" y2="1"><stop stop-color="'+p[0]+'"/><stop offset="1" stop-color="'+p[1]+'"/></linearGradient></defs><ellipse cx="50" cy="61" rx="37" ry="43" fill="#030609" opacity=".6"/><path d="M23 43 7 34 3 45 17 62 9 78 23 87 39 72 61 72 77 87 91 78 83 62 97 45 93 34 77 43Z" fill="'+p[1]+'" stroke="'+p[2]+'" stroke-width="4"/><path d="M29 31Q50 17 71 31L77 67Q67 91 50 94 33 91 23 67Z" fill="url(#enemySkin)" stroke="'+p[2]+'" stroke-width="4"/><path d="M33 35 50 26 67 35 65 58 50 70 35 58Z" fill="'+p[1]+'"/><path d="M35 30Q50 10 65 30L61 42 50 47 39 42Z" fill="'+p[0]+'" stroke="'+p[2]+'" stroke-width="3"/><path d="M39 51h7m8 0h7" stroke="#ffefc4" stroke-width="5" stroke-linecap="round"/><path d="M42 75 32 91m26-16 10 16" stroke="'+p[2]+'" stroke-width="7" stroke-linecap="round"/><path d="M73 43 88 20 94 25 79 52Z" fill="#8d9ba0" stroke="#27343a" stroke-width="3"/></svg>';}\nfunction playerPoint(){return{x:arena.clientWidth/2,y:arena.clientHeight-15-27}}
 function enemyPoint(e){return{x:e.x+17,y:e.y+19}}
 function closest(){if(!enemies.length)return null;let p=playerPoint(),limit=arena.clientWidth*.78*range();let target=null,best=Infinity;for(const e of enemies){let q=enemyPoint(e),d=Math.hypot(q.x-p.x,q.y-p.y);if(d<=limit&&d<best){best=d;target=e}}enemies.forEach(e=>e.el.classList.toggle('is-target',e===target));return target}
 function shoot(target,now){
@@ -175,6 +179,7 @@ function hitEnemy(e,dmg,x,y,aoe){
 }
 function step(now,dt){
  if(!paused&&inBattle){
+  survivalMs+=dt;let wholeSeconds=Math.floor(survivalMs/1000);if(wholeSeconds>rewardedSeconds){s.coins+=wholeSeconds-rewardedSeconds;rewardedSeconds=wholeSeconds;save();update()}let mm=String(Math.floor(wholeSeconds/60)).padStart(2,'0'),ss=String(wholeSeconds%60).padStart(2,'0');$('survivalTime').textContent='TEMPO '+mm+':'+ss;
   if(now-lastSpawn>Math.max(380,1050-s.stage*18)){if(spawned<waveSize){spawn();spawned++;lastSpawn=now}}
   let target=closest();if(target&&now-lastShot>rate()){shoot(target,now);lastShot=now}
   enemies.forEach(e=>{e.y+=e.speed*dt/1000;e.el.style.top=e.y+'px';e.el.style.left=e.x+'px';let f=e.el.querySelector('i');if(f)f.style.width=Math.max(0,e.hp/e.maxHp*100)+'%';if(e.y>arena.clientHeight-110){e.el.remove();e.hp=0;s.hp-=e.damage;enemies=enemies.filter(a=>a!==e);if(s.hp<=0){s.hp=0;paused=true;returning=true;setTimeout(()=>{if(returning&&inBattle){returning=false;showHome();toast('FIM DE BATALHA! Use suas moedas para melhorar o arsenal.')}},1100)}update()}});
