@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#090d16">
+<title>ARSENAL IDLE</title>
+<style>
+:root{--bg:#090d16;--panel:#111a29;--line:#26364b;--muted:#8191a8;--text:#edf4ff;--cyan:#55d9ff;--gold:#ffc75e;--red:#ff6474;--green:#63e6a5}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -10%,#1a3550 0%,#0b1320 42%,#070a11 100%);color:var(--text);font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;min-height:100vh;padding:12px 12px 24px}
+.app{width:min(100%,510px);margin:auto}.top{display:flex;justify-content:space-between;align-items:center;margin:3px 2px 12px}.brand{font-size:12px;letter-spacing:3px;color:var(--cyan);font-weight:900}.brand b{display:block;font-size:23px;letter-spacing:1.5px;color:#fff;margin-top:2px}.save{font-size:10px;color:var(--green);border:1px solid #245943;padding:6px 9px;border-radius:20px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px}.stat,.panel{background:linear-gradient(145deg,#152236,#0e1725);border:1px solid var(--line);border-radius:12px}.stat{padding:9px 10px}.stat small{display:block;color:var(--muted);font-size:9px;letter-spacing:1px;text-transform:uppercase}.stat strong{font-size:17px;display:block;margin-top:3px}.gold{color:var(--gold)}.cyan{color:var(--cyan)}.red{color:var(--red)}
+.arena{position:relative;height:390px;overflow:hidden;border:1px solid #29435b;border-radius:16px;background:linear-gradient(180deg,#101d2d 0%,#132b3b 48%,#172b30 100%);box-shadow:inset 0 0 45px #030811,0 12px 30px #0006}
+.arena:before{content:"";position:absolute;inset:0;background-image:linear-gradient(#6db8d00b 1px,transparent 1px),linear-gradient(90deg,#6db8d00b 1px,transparent 1px);background-size:28px 28px;pointer-events:none}
+.hud{position:absolute;top:10px;left:11px;right:11px;display:flex;justify-content:space-between;z-index:3;font-size:10px;color:#b9c9d9;text-transform:uppercase;letter-spacing:1px}.wave{color:var(--gold);font-weight:800}
+.enemy{position:absolute;width:28px;height:28px;border-radius:8px;background:linear-gradient(145deg,#ff9b73,#c74354);border:2px solid #ffc0a0;box-shadow:0 0 16px #ff526766;display:grid;place-items:center;font-size:15px;z-index:2;transition:filter .1s}.enemy.boss{width:48px;height:48px;border-radius:13px;font-size:25px;background:linear-gradient(145deg,#c47cff,#5b3db0);border-color:#dfbaff;box-shadow:0 0 28px #a46bff99}
+.hpbar{position:absolute;top:-7px;left:-4px;width:36px;height:4px;background:#49232c;border-radius:5px;overflow:hidden}.hpbar i{display:block;height:100%;background:#ff6374}
+.player{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);width:58px;height:65px;z-index:4;display:flex;align-items:center;flex-direction:column}.head{width:23px;height:23px;border-radius:50%;background:#f0c39c;border:2px solid #ffe1c4;box-shadow:0 0 12px #55d9ff66}.bodyman{width:34px;height:31px;background:linear-gradient(90deg,#287da0,#42c6db);border:2px solid #8ceaff;border-radius:9px 9px 5px 5px;margin-top:2px}.legs{width:28px;height:13px;border-left:5px solid #a7c4d8;border-right:5px solid #a7c4d8}
+.weapon-label{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:1px;color:#8deaff;white-space:nowrap;font-weight:800}
+.projectile{position:absolute;width:7px;height:13px;border-radius:5px;background:#ffe18b;box-shadow:0 0 12px #ffc75e;z-index:3;pointer-events:none}
+.hit{position:absolute;color:#fff;font-size:12px;font-weight:900;text-shadow:0 1px 5px #000;z-index:5;pointer-events:none;animation:rise .55s forwards}@keyframes rise{to{transform:translateY(-24px);opacity:0}}
+.fx{position:absolute;width:22px;height:22px;border:2px solid #ffe18b;border-radius:50%;z-index:5;pointer-events:none;animation:boom .35s forwards}@keyframes boom{to{transform:scale(2.5);opacity:0}}
+.bottom-hud{position:absolute;bottom:9px;left:10px;right:10px;display:flex;justify-content:space-between;color:#a9bacb;font-size:10px;z-index:5}
+.health{height:7px;background:#48232d;border-radius:9px;margin:10px 0 12px;overflow:hidden}.health i{height:100%;display:block;width:100%;background:linear-gradient(90deg,#ff536a,#ff9b76);transition:width .2s}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}.panel{padding:12px;margin-top:9px}.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.section-head h2{font-size:12px;letter-spacing:1.5px;margin:0}.section-head span{font-size:10px;color:var(--muted)}
+.weapon-card{display:flex;align-items:center;gap:10px}.weapon-icon{width:46px;height:46px;display:grid;place-items:center;background:#1a2d42;border:1px solid #34506a;border-radius:11px;font-size:25px}.weapon-info{flex:1;min-width:0}.weapon-info strong{font-size:13px;display:block}.weapon-info small{color:var(--muted);font-size:10px}.next{font-size:10px;color:var(--gold);margin-top:4px}
+button{font:inherit;border:1px solid #36516b;border-radius:9px;background:linear-gradient(180deg,#1b3850,#14283b);color:#eaf8ff;padding:10px;cursor:pointer;font-weight:800;font-size:11px;transition:.12s}button:active{transform:scale(.97)}button:disabled{opacity:.35;cursor:not-allowed}.upgrade-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.up{display:flex;flex-direction:column;text-align:left;gap:4px;min-height:64px}.up b{font-size:11px}.up small{font-size:9px;color:#9eb1c5}.up em{font-style:normal;color:var(--gold);font-size:10px}
+.progress{height:5px;background:#26374b;border-radius:8px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;background:var(--cyan);width:0}
+.footer{font-size:9px;text-align:center;color:#60748b;margin:12px 0 0;line-height:1.5}.toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,20px);opacity:0;background:#eaf8ff;color:#102032;padding:10px 16px;border-radius:20px;font-size:11px;font-weight:900;z-index:20;transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-height:760px){.arena{height:340px}}@media(min-width:430px){.arena{height:420px}}
+</style>
+</head>
+<body>
+<main class="app">
+<header class="top"><div class="brand">PROJETO DE SOBREVIVÊNCIA<b>ARSENAL IDLE</b></div><div class="save" id="saveState">● SALVO</div></header>
+<section class="stats">
+ <div class="stat"><small>Moedas</small><strong class="gold" id="coins">0</strong></div>
+ <div class="stat"><small>Eliminações</small><strong id="kills">0</strong></div>
+ <div class="stat"><small>Fase / Onda</small><strong class="cyan" id="stage">1 / 1</strong></div>
+</section>
+<section class="arena" id="arena">
+ <div class="hud"><span id="enemyCount">AMEAÇAS: 0</span><span class="wave" id="waveLabel">ONDA 1</span></div>
+ <div class="player" id="player"><div class="head"></div><div class="bodyman"></div><div class="legs"></div></div>
+ <div class="weapon-label" id="weaponLabel">GRAVETO</div>
+ <div class="bottom-hud"><span id="weaponDamage">DANO 1</span><span id="rangeLabel">ALCANCE 100%</span></div>
+</section>
+<div class="health"><i id="healthBar"></i></div>
+<div class="section-head"><h2>ARSENAL ATUAL</h2><span id="healthText">VIDA 100 / 100</span></div>
+<section class="panel">
+ <div class="weapon-card"><div class="weapon-icon" id="weaponIcon">🪵</div><div class="weapon-info"><strong id="weaponName">Graveto</strong><small id="weaponDesc">Ataque simples e direto</small><div class="next" id="nextWeapon">Próxima: Pedra • 100 moedas</div></div><button id="evolveBtn">EVOLUIR</button></div>
+ <div class="progress"><i id="waveProgress"></i></div>
+</section>
+<section class="panel">
+ <div class="section-head"><h2>MELHORIAS DE COMBATE</h2><span>UPGRADES PERMANENTES</span></div>
+ <div class="upgrade-grid">
+  <button class="up" id="damageBtn"><b>⚔ Dano +25%</b><small id="damageLevel">Nível 0</small><em id="damageCost">Custo: 25</em></button>
+  <button class="up" id="speedBtn"><b>⚡ Cadência +12%</b><small id="speedLevel">Nível 0</small><em id="speedCost">Custo: 40</em></button>
+  <button class="up" id="rangeBtn"><b>◎ Alcance +15%</b><small id="rangeLevel">Nível 0</small><em id="rangeCost">Custo: 35</em></button>
+  <button class="up" id="critBtn"><b>✦ Crítico +3%</b><small id="critLevel">Nível 0</small><em id="critCost">Custo: 60</em></button>
+ </div>
+</section>
+<div class="controls"><button id="pauseBtn">Ⅱ PAUSAR</button><button id="resetBtn">↻ REINICIAR</button></div>
+<p class="footer">O combatente ataca automaticamente a ameaça mais próxima. Invista as moedas, evolua o arsenal e sobreviva às ondas.<br>Seu progresso fica salvo neste dispositivo.</p>
+</main><div class="toast" id="toast"></div>
+<script>
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id), arena=$('arena');
+const weapons=[
+ {name:'Graveto',icon:'🪵',damage:1,rate:1050,desc:'Ataque simples e direto',type:'melee'},
+ {name:'Pedra',icon:'🪨',damage:3,rate:950,desc:'Arremesso de pedra',type:'stone',cost:100},
+ {name:'Estilingue',icon:'🪃',damage:7,rate:820,desc:'Projétil rápido',type:'sling',cost:350},
+ {name:'Arco e flecha',icon:'🏹',damage:15,rate:760,desc:'Flechas de longo alcance',type:'arrow',cost:900},
+ {name:'Besta',icon:'🎯',damage:30,rate:850,desc:'Disparo pesado e perfurante',type:'bolt',cost:2500},
+ {name:'Pistola',icon:'🔫',damage:55,rate:520,desc:'Disparos de alta velocidade',type:'bullet',cost:7000},
+ {name:'Espingarda',icon:'💥',damage:110,rate:1050,desc:'Rajada de múltiplos projéteis',type:'shotgun',cost:18000},
+ {name:'Fuzil',icon:'🔧',damage:75,rate:230,desc:'Rajada automática precisa',type:'rifle',cost:45000},
+ {name:'Metralhadora pesada',icon:'⚙️',damage:100,rate:125,desc:'Chuva contínua de projéteis',type:'heavy',cost:120000},
+ {name:'Canhão de plasma',icon:'🔮',damage:500,rate:700,desc:'Energia devastadora em área',type:'plasma',cost:350000}
+];
+const defaults={coins:0,kills:0,stage:1,wave:1,weapon:0,damageLv:0,speedLv:0,rangeLv:0,critLv:0,hp:100,maxHp:100};
+let s={...defaults,...load()}, enemies=[],shots=[],lastShot=0,lastSpawn=0,spawned=0,waveSize=8,paused=false,last=0,saveTimer=0;
+function load(){try{return JSON.parse(localStorage.getItem('arsenalIdleSave'))||{}}catch(e){return {}}}
+function save(){localStorage.setItem('arsenalIdleSave',JSON.stringify(s));$('saveState').textContent='● SALVO'}
+function fmt(n){return Math.floor(n).toLocaleString('pt-BR')}
+function cost(base,lv){return Math.floor(base*Math.pow(1.48,lv))}
+function toast(t){$('toast').textContent=t;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),1300)}
+function damage(){return weapons[s.weapon].damage*Math.pow(1.25,s.damageLv)}
+function rate(){return Math.max(75,weapons[s.weapon].rate*Math.pow(.88,s.speedLv))}
+function range(){return Math.min(1.8,1+s.rangeLv*.15)}
+function crit(){return Math.min(.75,s.critLv*.03)}
+function update(){
+ $('coins').textContent=fmt(s.coins);$('kills').textContent=fmt(s.kills);$('stage').textContent=s.stage+' / '+s.wave;$('waveLabel').textContent='ONDA '+s.wave;
+ $('enemyCount').textContent='AMEAÇAS: '+enemies.length;$('healthText').textContent='VIDA '+Math.ceil(s.hp)+' / '+s.maxHp;$('healthBar').style.width=Math.max(0,s.hp/s.maxHp*100)+'%';
+ let w=weapons[s.weapon];$('weaponIcon').textContent=w.icon;$('weaponName').textContent=w.name;$('weaponLabel').textContent=w.name.toUpperCase();$('weaponDesc').textContent=w.desc;
+ $('weaponDamage').textContent='DANO '+fmt(damage());$('rangeLabel').textContent='ALCANCE '+Math.round(range()*100)+'%';
+ let next=weapons[s.weapon+1];$('nextWeapon').textContent=next?'Próxima: '+next.name+' • '+fmt(next.cost)+' moedas':'ARSENAL MÁXIMO ALCANÇADO';
+ $('evolveBtn').disabled=!next||s.coins<next.cost;$('evolveBtn').textContent=next?'EVOLUIR':'MÁXIMO';
+ for(let [k,b,c] of [['damage','damage',25],['speed','speed',40],['range','range',35],['crit','crit',60]]){$(k+'Level').textContent='Nível '+s[b+'Lv'];$(k+'Cost').textContent='Custo: '+fmt(cost(c,s[b+'Lv']));$(k+'Btn').disabled=s.coins<cost(c,s[b+'Lv'])||(k==='speed'&&rate()<=75)||(k==='range'&&range()>=1.8)||(k==='crit'&&crit()>=.75)}
+ $('waveProgress').style.width=Math.min(100,spawned/waveSize*100)+'%';
+}
+function buy(key,base){let c=cost(base,s[key+'Lv']);if(s.coins<c)return;s.coins-=c;s[key+'Lv']++;toast('Melhoria comprada!');update();save()}
+$('damageBtn').onclick=()=>buy('damage',25);$('speedBtn').onclick=()=>buy('speed',40);$('rangeBtn').onclick=()=>buy('range',35);$('critBtn').onclick=()=>buy('crit',60);
+$('evolveBtn').onclick=()=>{let n=weapons[s.weapon+1];if(n&&s.coins>=n.cost){s.coins-=n.cost;s.weapon++;toast('ARSENAL EVOLUÍDO: '+n.name.toUpperCase());update();save()}};
+$('pauseBtn').onclick=()=>{paused=!paused;$('pauseBtn').textContent=paused?'▶ CONTINUAR':'Ⅱ PAUSAR'};
+$('resetBtn').onclick=()=>{if(confirm('Apagar todo o progresso e começar do zero?')){localStorage.removeItem('arsenalIdleSave');s={...defaults};enemies=[];shots=[];spawned=0;update();toast('Progresso reiniciado')}}; 
+function spawn(){
+ let boss=s.wave%5===0&&spawned===0,scale=1+(s.stage-1)*.48+(s.wave-1)*.13;
+ let hp=(boss?180:16+spawned*2)*scale, speed=(boss?17:23+Math.random()*17)*(1+(s.stage-1)*.04);
+ let el=document.createElement('div');el.className='enemy'+(boss?' boss':'');el.textContent=boss?'👹':['👾','💀','🦠','👺'][Math.floor(Math.random()*4)];
+ let x=18+Math.random()*(arena.clientWidth-55);el.style.left=x+'px';el.style.top='42px';
+ let bar=document.createElement('div');bar.className='hpbar';let fill=document.createElement('i');bar.append(fill);el.append(bar);arena.append(el);
+ enemies.push({el,x,y:42,hp,maxHp:hp,speed,boss,damage:boss?28:12});
+}
+function closest(){let p=arena.clientWidth/2;return enemies.reduce((a,e)=>!a||Math.abs(e.x-p)<Math.abs(a.x-p)?e:a,null)}
+function shoot(target,now){
+ let w=weapons[s.weapon],count=w.type==='shotgun'?5:w.type==='heavy'?2:1;
+ for(let i=0;i<count;i++){let el=document.createElement('div');el.className='projectile';let x=arena.clientWidth/2+(count>1?(i-(count-1)/2)*8:0),y=arena.clientHeight-100;el.style.left=x+'px';el.style.top=y+'px';if(w.type==='plasma'){el.style.width='17px';el.style.height='17px';el.style.borderRadius='50%';el.style.background='#c18cff';el.style.boxShadow='0 0 18px #b477ff'}arena.append(el);shots.push({el,x,y,target,damage:damage()*(w.type==='shotgun'?.42:1),speed:w.type==='melee'?12: w.type==='bullet'||w.type==='rifle'||w.type==='heavy'?15:10,aoe:w.type==='plasma',pierce:w.type==='bolt'||s.weapon>=7})}
+}
+function hitEnemy(e,dmg,x,y,aoe){
+ let critical=Math.random()<crit(),d=dmg*(critical?2:1);e.hp-=d;let t=document.createElement('div');t.className='hit';t.textContent=(critical?'CRIT ':'')+fmt(d);t.style.left=x+'px';t.style.top=y+'px';arena.append(t);setTimeout(()=>t.remove(),600);
+ if(aoe){let fx=document.createElement('div');fx.className='fx';fx.style.left=x+'px';fx.style.top=y+'px';arena.append(fx);setTimeout(()=>fx.remove(),400);enemies.forEach(other=>{if(other!==e&&Math.hypot(other.x-e.x,other.y-e.y)<75)other.hp-=dmg*.55})}
+ if(e.hp<=0){e.el.remove();enemies=enemies.filter(a=>a!==e);s.kills++;s.coins+=e.boss?Math.floor(80*s.stage):Math.max(2,Math.floor((3+s.stage*.8)*(1+s.weapon*.13)));if(e.boss)toast('CHEFE ELIMINADO!');update()}
+}
+function step(now,dt){
+ if(!paused){
+  if(now-lastSpawn>Math.max(380,1050-s.stage*18)){if(spawned<waveSize){spawn();spawned++;lastSpawn=now}}
+  let target=closest();if(target&&now-lastShot>rate()){shoot(target,now);lastShot=now}
+  enemies.forEach(e=>{e.y+=e.speed*dt/1000;e.el.style.top=e.y+'px';e.el.style.left=e.x+'px';let f=e.el.querySelector('i');if(f)f.style.width=Math.max(0,e.hp/e.maxHp*100)+'%';if(e.y>arena.clientHeight-110){e.el.remove();e.hp=0;s.hp-=e.damage;enemies=enemies.filter(a=>a!==e);if(s.hp<=0){s.hp=0;paused=true;$('pauseBtn').textContent='▶ CONTINUAR';toast('VOCÊ FOI DERROTADO. REINICIE OU CONTINUE.')}update()}});
+  shots.forEach(sh=>{if(!enemies.includes(sh.target)){sh.target=closest();if(!sh.target){sh.el.remove();shots=shots.filter(a=>a!==sh);return}}
+   let dx=sh.target.x+13-sh.x,dy=sh.target.y+13-sh.y,dist=Math.hypot(dx,dy),step=sh.speed*dt/16; if(dist<step+12){hitEnemy(sh.target,sh.damage,sh.target.x,sh.target.y,sh.aoe);sh.el.remove();shots=shots.filter(a=>a!==sh)}else{sh.x+=dx/dist*step;sh.y+=dy/dist*step;sh.el.style.left=sh.x+'px';sh.el.style.top=sh.y+'px'}
+  });
+  if(spawned>=waveSize&&enemies.length===0){s.wave++;if(s.wave>5){s.wave=1;s.stage++;s.maxHp+=10;s.hp=Math.min(s.maxHp,s.hp+25);toast('FASE '+s.stage+' DESBLOQUEADA!')}spawned=0;waveSize=8+Math.min(14,s.stage+s.wave);update();save()}
+  saveTimer+=dt;if(saveTimer>5000){save();saveTimer=0}
+ }
+}
+function loop(now){let dt=Math.min(50,now-(last||now));last=now;step(now,dt);requestAnimationFrame(loop)}
+update();requestAnimationFrame(loop);window.addEventListener('beforeunload',save);
+})();
+</script>
+</body>
+</html>
