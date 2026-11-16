@@ -38,8 +38,11 @@ button{font:inherit;border:1px solid #36516b;border-radius:9px;background:linear
 .weapon-panel{margin-top:9px}.battle-button{width:100%;margin-top:12px;padding:17px 18px;display:flex;justify-content:space-between;align-items:center;border:1px solid #b27b35;border-radius:13px;background:linear-gradient(110deg,#f0a33f,#c86a2c);color:#21160d;font-size:14px;letter-spacing:1.5px;box-shadow:0 7px 20px #0005}.battle-button b{font-size:22px}.battle-button:active{filter:brightness(1.12)}
 .battle-top{display:flex;align-items:center;gap:12px;padding:10px 2px 13px}.exit-battle{width:38px;height:38px;padding:0;font-size:27px;border-radius:10px}.battle-top>div:nth-child(2){display:flex;flex-direction:column;gap:3px;flex:1}.battle-top small{font-size:9px;color:#8fa7b8;letter-spacing:1.5px}.battle-top strong{font-size:15px;color:#fff}.battle-life{min-width:112px;text-align:right}.battle-life span{font-size:8px;color:#a9bacb;letter-spacing:1px}.battle-life b{display:block;font-size:12px;margin:2px 0 5px}.battle-life i{display:block;height:6px;border-radius:9px;background:#48232d;overflow:hidden}.battle-life em{display:block;width:100%;height:100%;background:linear-gradient(90deg,#ff536a,#ff9b76);transition:width .2s}
 #battleScreen .arena{height:min(68vh,590px);min-height:390px;border-radius:13px}
-#battleScreen .player{width:53px;height:68px;bottom:12px}
-#battleScreen .hero-art{width:100%;height:100%}
+#battleScreen .player{width:38px;height:38px;bottom:16px;filter:drop-shadow(0 2px 5px #000b)}
+#battleScreen .hero-art{width:100%;height:100%;overflow:visible}
+#battleScreen .player:after{content:"";position:absolute;inset:-5px;border:1px solid #7ee8ff55;border-radius:50%;pointer-events:none}
+.enemy.is-target{filter:drop-shadow(0 0 7px #ffe08a) drop-shadow(0 0 3px #fff);}
+.enemy.is-target .hpbar{height:5px;box-shadow:0 0 6px #ffcf67}
 #battleScreen .enemy{width:34px;height:39px}
 #battleScreen .enemy.boss{width:57px;height:63px}
 #battleScreen .weapon-label{font-size:8px;bottom:5px}
@@ -81,7 +84,7 @@ button{font:inherit;border:1px solid #36516b;border-radius:9px;background:linear
  <div class="battle-top"><button class="exit-battle" id="retreatBtn" aria-label="Retornar à base">‹</button><div><small id="battleStage">FASE 1</small><strong id="battleWave">ONDA 1</strong></div><div class="battle-life"><span>VIDA</span><b id="healthText">100 / 100</b><i><em id="healthBar"></em></i></div></div>
  <section class="arena" id="arena">
   <div class="hud"><span id="enemyCount">AMEAÇAS: 0</span><span class="wave" id="waveLabel">ONDA 1</span></div>
-  <div class="player" id="player"><img class="hero-art" src="assets/hero.svg" alt="Combatente"></div>
+  <div class="player" id="player" aria-label="Combatente visto de cima"><svg class="hero-art" viewBox="0 0 100 100" role="img" aria-label="Combatente visto de cima"><defs><linearGradient id="topArmor" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#9af2f5"/><stop offset=".45" stop-color="#277b91"/><stop offset="1" stop-color="#123449"/></linearGradient><linearGradient id="topGun" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#dce9e8"/><stop offset="1" stop-color="#394d59"/></linearGradient></defs><ellipse cx="50" cy="53" rx="35" ry="39" fill="#050b12" opacity=".65"/><path d="M20 38 9 31 5 39 17 53 9 65 19 72 32 61 68 61 81 72 91 64 83 52 95 39 88 31 76 39Z" fill="#142b3c" stroke="#9abdc4" stroke-width="3"/><path d="M28 27Q50 14 72 27L78 57Q70 77 50 81 30 77 22 57Z" fill="url(#topArmor)" stroke="#b5f4ef" stroke-width="3"/><path d="M34 30Q50 21 66 30L68 51 50 66 32 51Z" fill="#1b3d51" stroke="#5ed2df" stroke-width="2"/><path d="M39 31Q50 21 61 31L59 44 50 51 41 44Z" fill="#d2b18f" stroke="#f5d6b5" stroke-width="2"/><path d="M39 30Q50 18 61 30L58 35 50 32 42 35Z" fill="#263a46"/><path d="M58 43 88 13 95 19 65 51Z" fill="url(#topGun)" stroke="#172a37" stroke-width="3"/><path d="m84 17 9-9 5 5-9 9" fill="#ffc76c" stroke="#493b2b" stroke-width="2"/><circle cx="50" cy="56" r="5" fill="#e8f7f0" stroke="#2a6678" stroke-width="2"/><path d="m37 67-7 10m33-10 7 10" stroke="#c3d9d5" stroke-width="5" stroke-linecap="round"/><path d="M45 74h10" stroke="#f0c16e" stroke-width="3" stroke-linecap="round"/></svg></div>
   <div class="weapon-label" id="weaponLabel">GRAVETO</div>
  </section>
  <div class="battle-foot"><span id="battleWeapon">GRAVETO</span><span id="battleDamage">DANO 1</span></div>
@@ -138,10 +141,12 @@ function spawn(){
  let bar=document.createElement('div');bar.className='hpbar';let fill=document.createElement('i');bar.append(fill);el.append(bar);arena.append(el);
  enemies.push({el,x,y:42,hp,maxHp:hp,speed,boss,damage:boss?28:12});
 }
-function closest(){let p=arena.clientWidth/2;return enemies.reduce((a,e)=>!a||Math.abs(e.x-p)<Math.abs(a.x-p)?e:a,null)}
+function playerPoint(){return{x:arena.clientWidth/2,y:arena.clientHeight-16-19}}
+function enemyPoint(e){return{x:e.x+17,y:e.y+19}}
+function closest(){if(!enemies.length)return null;let p=playerPoint(),limit=arena.clientWidth*.78*range();let target=null,best=Infinity;for(const e of enemies){let q=enemyPoint(e),d=Math.hypot(q.x-p.x,q.y-p.y);if(d<=limit&&d<best){best=d;target=e}}enemies.forEach(e=>e.el.classList.toggle('is-target',e===target));return target}
 function shoot(target,now){
- let w=weapons[s.weapon],count=w.type==='shotgun'?5:w.type==='heavy'?2:1;
- for(let i=0;i<count;i++){let el=document.createElement('div');el.className='projectile';let x=arena.clientWidth/2+(count>1?(i-(count-1)/2)*8:0),y=arena.clientHeight-100;el.style.left=x+'px';el.style.top=y+'px';if(w.type==='plasma'){el.style.width='17px';el.style.height='17px';el.style.borderRadius='50%';el.style.background='#c18cff';el.style.boxShadow='0 0 18px #b477ff'}arena.append(el);shots.push({el,x,y,target,damage:damage()*(w.type==='shotgun'?.42:1),speed:w.type==='melee'?12: w.type==='bullet'||w.type==='rifle'||w.type==='heavy'?15:10,aoe:w.type==='plasma',pierce:w.type==='bolt'||s.weapon>=7})}
+ let w=weapons[s.weapon],count=w.type==='shotgun'?5:w.type==='heavy'?2:1,p=playerPoint();
+ for(let i=0;i<count;i++){let el=document.createElement('div');el.className='projectile';let x=p.x+(count>1?(i-(count-1)/2)*8:0),y=p.y-5;el.style.left=x+'px';el.style.top=y+'px';if(w.type==='plasma'){el.style.width='17px';el.style.height='17px';el.style.borderRadius='50%';el.style.background='#c18cff';el.style.boxShadow='0 0 18px #b477ff'}arena.append(el);shots.push({el,x,y,target,damage:damage()*(w.type==='shotgun'?.42:1),speed:w.type==='melee'?12: w.type==='bullet'||w.type==='rifle'||w.type==='heavy'?15:10,aoe:w.type==='plasma',pierce:w.type==='bolt'||s.weapon>=7})}
 }
 function hitEnemy(e,dmg,x,y,aoe){
  let critical=Math.random()<crit(),d=dmg*(critical?2:1);e.hp-=d;let t=document.createElement('div');t.className='hit';t.textContent=(critical?'CRIT ':'')+fmt(d);t.style.left=x+'px';t.style.top=y+'px';arena.append(t);setTimeout(()=>t.remove(),600);
@@ -154,7 +159,7 @@ function step(now,dt){
   let target=closest();if(target&&now-lastShot>rate()){shoot(target,now);lastShot=now}
   enemies.forEach(e=>{e.y+=e.speed*dt/1000;e.el.style.top=e.y+'px';e.el.style.left=e.x+'px';let f=e.el.querySelector('i');if(f)f.style.width=Math.max(0,e.hp/e.maxHp*100)+'%';if(e.y>arena.clientHeight-110){e.el.remove();e.hp=0;s.hp-=e.damage;enemies=enemies.filter(a=>a!==e);if(s.hp<=0){s.hp=0;paused=true;returning=true;setTimeout(()=>{if(returning&&inBattle){returning=false;showHome();toast('FIM DE BATALHA! Use suas moedas para melhorar o arsenal.')}},1100)}update()}});
   shots.forEach(sh=>{if(!enemies.includes(sh.target)){sh.target=closest();if(!sh.target){sh.el.remove();shots=shots.filter(a=>a!==sh);return}}
-   let dx=sh.target.x+13-sh.x,dy=sh.target.y+13-sh.y,dist=Math.hypot(dx,dy),step=sh.speed*dt/16; if(dist<step+12){hitEnemy(sh.target,sh.damage,sh.target.x,sh.target.y,sh.aoe);sh.el.remove();shots=shots.filter(a=>a!==sh)}else{sh.x+=dx/dist*step;sh.y+=dy/dist*step;sh.el.style.left=sh.x+'px';sh.el.style.top=sh.y+'px'}
+   let aim=enemyPoint(sh.target),dx=aim.x-sh.x,dy=aim.y-sh.y,dist=Math.hypot(dx,dy),step=sh.speed*dt/16; if(dist<step+12){hitEnemy(sh.target,sh.damage,sh.target.x,sh.target.y,sh.aoe);sh.el.remove();shots=shots.filter(a=>a!==sh)}else{sh.x+=dx/dist*step;sh.y+=dy/dist*step;sh.el.style.left=sh.x+'px';sh.el.style.top=sh.y+'px'}
   });
   if(spawned>=waveSize&&enemies.length===0){s.wave++;if(s.wave>5){s.wave=1;s.stage++;s.maxHp+=10;s.hp=Math.min(s.maxHp,s.hp+25);toast('FASE '+s.stage+' DESBLOQUEADA!')}spawned=0;waveSize=8+Math.min(14,s.stage+s.wave);update();$('battleWave').textContent='ONDA '+s.wave;save()}
   saveTimer+=dt;if(saveTimer>5000){save();saveTimer=0}
